@@ -27,7 +27,7 @@ Sistema de presentación multimedia para iglesias, diseñado para proyectar canc
 
 Para una instalación completa que permita actualizaciones automáticas:
 
-1. Descarga `ChurchPresenter-1.0.0-windows.zip` desde [Releases](https://github.com/dario1091/church-presenter/releases)
+1. Descarga `ChurchPresenter-1.0.1-windows.zip` desde [Releases](https://github.com/dario1091/church-presenter/releases)
 2. Descomprime en `C:\Program Files\ChurchPresenter` (puede requerir permisos de administrador)
 3. Crea un acceso directo al `ChurchPresenter.exe` en el escritorio o menú de inicio.
 
@@ -37,7 +37,7 @@ Ahora puedes ejecutar la aplicación desde el acceso directo. Las actualizacione
 
 Si prefieres una instalación portable sin actualizaciones:
 
-1. Descarga `ChurchPresenter-1.0.0-windows.zip` desde [Releases](https://github.com/dario1091/church-presenter/releases)
+1. Descarga `ChurchPresenter-1.0.1-windows.zip` desde [Releases](https://github.com/dario1091/church-presenter/releases)
 2. Descomprime el archivo en una carpeta de tu elección
 3. Ejecuta `ChurchPresenter.exe`
 
@@ -57,14 +57,14 @@ Esta advertencia desaparecerá en futuras versiones cuando obtengamos un certifi
 
 Para una instalación completa que permita actualizaciones automáticas:
 
-1. Descarga `ChurchPresenter-1.0.0-linux-full.nupkg` desde [Releases](https://github.com/dario1091/church-presenter/releases)
+1. Descarga `ChurchPresenter-1.0.1-linux-full.nupkg` desde [Releases](https://github.com/dario1091/church-presenter/releases)
 2. Crea un directorio para la instalación:
    ```bash
    sudo mkdir -p /opt/ChurchPresenter
    ```
 3. Descomprime el paquete en el directorio:
    ```bash
-   sudo unzip ChurchPresenter-1.0.0-linux-full.nupkg -d /opt/ChurchPresenter
+   sudo unzip ChurchPresenter-1.0.1-linux-full.nupkg -d /opt/ChurchPresenter
    ```
 4. Crea un enlace simbólico para ejecutar desde cualquier lugar:
    ```bash

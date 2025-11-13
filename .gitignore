@@ -156,3 +156,4 @@ Releases-Test/*
 # archivo de comandos locales
 comandos_compilar.md
 church-presenter.code-workspace
+GUIA_CREACION_RELEASES.md
