@@ -1,0 +1,186 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:ChurchPresenter.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
+        x:Class="ChurchPresenter.Views.UpdateDialog"
+        x:DataType="vm:UpdateViewModel"
+        Title="Actualizaciones"
+        Width="500"
+        Height="400"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource BackgroundBrush}">
+
+  <Design.DataContext>
+    <vm:UpdateViewModel/>
+  </Design.DataContext>
+
+  <Border Padding="30" Background="{DynamicResource SurfaceBrush}">
+    <Grid RowDefinitions="Auto,*,Auto">
+      
+      <!-- ENCABEZADO -->
+      <StackPanel Grid.Row="0" Spacing="10" Margin="0,0,0,20">
+        <TextBlock Text="Actualizaciones"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        
+        <TextBlock Text="Mantén tu aplicación actualizada con las últimas mejoras"
+                   FontSize="13"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+      </StackPanel>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <StackPanel Grid.Row="1" Spacing="15">
+        
+        <!-- Información de versión -->
+        <Border Background="{DynamicResource CardBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="20">
+          <StackPanel Spacing="12">
+            <Grid ColumnDefinitions="Auto,*">
+              <TextBlock Grid.Column="0"
+                         Text="Versión actual:"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextSecondaryBrush}"/>
+              <TextBlock Grid.Column="1"
+                         Text="{Binding CurrentVersion}"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource PrimaryBrush}"
+                         HorizontalAlignment="Right"/>
+            </Grid>
+            
+            <!-- Nueva versión disponible -->
+            <Grid ColumnDefinitions="Auto,*"
+                  IsVisible="{Binding UpdateAvailable}">
+              <TextBlock Grid.Column="0"
+                         Text="Nueva versión:"
+                         FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextSecondaryBrush}"/>
+              <TextBlock Grid.Column="1"
+                         Text="{Binding NewVersion}"
+                         FontWeight="Bold"
+                         Foreground="{DynamicResource AccentBrush}"
+                         HorizontalAlignment="Right"/>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Estado actual -->
+        <Border Background="{DynamicResource CardBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="20">
+          <StackPanel Spacing="15">
+            
+            <!-- Mensaje de estado -->
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
+                       TextAlignment="Center"/>
+
+            <!-- Barra de progreso (visible solo durante descarga) -->
+            <StackPanel IsVisible="{Binding IsDownloading}" Spacing="8">
+              <ProgressBar Value="{Binding DownloadProgress}"
+                           Maximum="100"
+                           Height="8"
+                           Foreground="{DynamicResource PrimaryBrush}"
+                           Background="{DynamicResource BorderBrush}"/>
+              <TextBlock Text="{Binding DownloadProgress, StringFormat='{}{0}%'}"
+                         FontSize="12"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Spinner de carga (visible durante verificación) -->
+            <TextBlock Text="🔄 Verificando..."
+                       FontSize="16"
+                       Foreground="{DynamicResource TextSecondaryBrush}"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding IsChecking}"/>
+
+            <!-- Mensaje de error -->
+            <Border IsVisible="{Binding ErrorMessage, Converter={x:Static ObjectConverters.IsNotNull}}"
+                    Background="#FEE2E2"
+                    BorderBrush="#EF4444"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12">
+              <TextBlock Text="{Binding ErrorMessage}"
+                         FontSize="12"
+                         Foreground="#DC2626"
+                         TextWrapping="Wrap"/>
+            </Border>
+
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+
+      <!-- BOTONES DE ACCIÓN -->
+      <StackPanel Grid.Row="2" 
+                  Orientation="Horizontal" 
+                  HorizontalAlignment="Right" 
+                  Spacing="10"
+                  Margin="0,20,0,0">
+        
+        <!-- Botón: Verificar actualizaciones -->
+        <Button Content="Verificar actualizaciones"
+                Command="{Binding CheckForUpdatesCommand}"
+                IsEnabled="{Binding !IsChecking}"
+                Padding="16,10"
+                Background="{DynamicResource PrimaryBrush}"
+                Foreground="White"
+                CornerRadius="6"
+                FontWeight="SemiBold">
+          <Button.IsVisible>
+            <MultiBinding Converter="{x:Static BoolConverters.And}">
+              <Binding Path="!UpdateAvailable"/>
+              <Binding Path="!UpdateReadyToInstall"/>
+            </MultiBinding>
+          </Button.IsVisible>
+        </Button>
+
+        <!-- Botón: Descargar -->
+        <Button Content="Descargar"
+                Command="{Binding DownloadUpdateCommand}"
+                IsVisible="{Binding UpdateAvailable}"
+                IsEnabled="{Binding !IsDownloading}"
+                Padding="16,10"
+                Background="{DynamicResource AccentBrush}"
+                Foreground="White"
+                CornerRadius="6"
+                FontWeight="SemiBold"/>
+
+        <!-- Botón: Instalar y reiniciar -->
+        <Button Content="Instalar y reiniciar"
+                Command="{Binding InstallAndRestartCommand}"
+                IsVisible="{Binding UpdateReadyToInstall}"
+                Padding="16,10"
+                Background="#10B981"
+                Foreground="White"
+                CornerRadius="6"
+                FontWeight="SemiBold"/>
+
+        <!-- Botón: Cerrar -->
+        <Button Content="Cerrar"
+                Click="OnCloseClick"
+                Padding="16,10"
+                Background="{DynamicResource CardBrush}"
+                Foreground="{DynamicResource TextPrimaryBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="6"/>
+        
+      </StackPanel>
+
+    </Grid>
+  </Border>
+
+</Window>

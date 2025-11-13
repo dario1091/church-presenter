@@ -1,0 +1,164 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ChurchPresenter.ViewModels"
+        xmlns:views="using:ChurchPresenter.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="ChurchPresenter.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Church Presenter"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- Barra de título personalizada -->
+        <Border DockPanel.Dock="Top" 
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Height="40"
+                IsHitTestVisible="True">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Título -->
+                <TextBlock Grid.Column="0" 
+                          Text="Church Presenter" 
+                          Foreground="{DynamicResource TextPrimaryBrush}"
+                          VerticalAlignment="Center"
+                          Margin="15,0,0,0"
+                          FontWeight="SemiBold"
+                          FontSize="14"/>
+                
+                <!-- Área arrastrable -->
+                <Border Grid.Column="1" 
+                        Background="Transparent"
+                        PointerPressed="OnTitleBarPointerPressed"/>
+                
+                <!-- Botones de ventana -->
+                <StackPanel Grid.Column="2" 
+                           Orientation="Horizontal" 
+                           Spacing="0">
+                    <!-- Botón de cambio de tema -->
+                    <Button Command="{Binding ToggleThemeCommand}"
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            FontSize="18"
+                            ToolTip.Tip="Cambiar a tema claro"
+                            Content="🌙"
+                            IsVisible="{Binding IsDarkTheme}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    <Button Command="{Binding ToggleThemeCommand}"
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            FontSize="18"
+                            ToolTip.Tip="Cambiar a tema oscuro"
+                            Content="☀️"
+                            IsVisible="{Binding !IsDarkTheme}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    
+                    <!-- Botón de indexar Biblia -->
+                    <Button Click="OnIndexBibleClick"
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            FontSize="16"
+                            ToolTip.Tip="Indexar Biblia para búsqueda por IA"
+                            Content="🔍">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    
+                    <!-- Botón de actualizaciones -->
+                    <Button Click="OnOpenUpdateDialog"
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            FontSize="16"
+                            ToolTip.Tip="Buscar actualizaciones"
+                            Content="🔄">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    
+                    <Button Content="—" 
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            Click="OnMinimizeClick"
+                            FontSize="16">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    <Button Content="☐" 
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            Click="OnMaximizeClick"
+                            FontSize="16">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                    <Button Content="✕" 
+                            Width="45" 
+                            Height="40"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            Click="OnCloseClick"
+                            FontSize="16">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#E81123"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <!-- Contenido principal -->
+        <views:SongsView DataContext="{Binding Songs}"/>
+    </DockPanel>
+
+</Window>

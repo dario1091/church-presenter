@@ -1,0 +1,118 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:themes="clr-namespace:Avalonia.Themes.Fluent;assembly=Avalonia.Themes.Fluent"
+             x:Class="ChurchPresenter.App"
+             xmlns:local="using:ChurchPresenter"
+             RequestedThemeVariant="Dark">
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Paleta de colores moderna para tema OSCURO -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <!-- Colores primarios -->
+                    <Color x:Key="PrimaryColor">#6366F1</Color><!-- Indigo vibrante -->
+                    <Color x:Key="PrimaryLightColor">#818CF8</Color>
+                    <Color x:Key="PrimaryDarkColor">#4F46E5</Color>
+                    
+                    <!-- Colores de acento -->
+                    <Color x:Key="AccentColor">#F59E0B</Color><!-- Amber cálido -->
+                    <Color x:Key="AccentLightColor">#FBBF24</Color>
+                    <Color x:Key="AccentDarkColor">#D97706</Color>
+                    
+                    <!-- Colores de fondo oscuros modernos -->
+                    <Color x:Key="BackgroundColor">#0F172A</Color><!-- Slate 900 -->
+                    <Color x:Key="SurfaceColor">#1E293B</Color><!-- Slate 800 -->
+                    <Color x:Key="CardColor">#334155</Color><!-- Slate 700 -->
+                    
+                    <!-- Colores de texto -->
+                    <Color x:Key="TextPrimaryColor">#F1F5F9</Color><!-- Slate 100 -->
+                    <Color x:Key="TextSecondaryColor">#94A3B8</Color><!-- Slate 400 -->
+                    
+                    <!-- Colores de borde -->
+                    <Color x:Key="BorderColor">#475569</Color><!-- Slate 600 -->
+                    
+                    <!-- Brushes -->
+                    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+                    <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLightColor}"/>
+                    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDarkColor}"/>
+                    
+                    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+                    <SolidColorBrush x:Key="AccentLightBrush" Color="{StaticResource AccentLightColor}"/>
+                    <SolidColorBrush x:Key="AccentDarkBrush" Color="{StaticResource AccentDarkColor}"/>
+                    
+                    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+                    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}"/>
+                    <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}"/>
+                    
+                    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
+                    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
+                    
+                    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+                    
+                    <!-- Card Dialog -->
+                    <SolidColorBrush x:Key="CardBackground" Color="{StaticResource SurfaceColor}"/>
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource BorderColor}"/>
+                    <SolidColorBrush x:Key="CardHeaderBackground" Color="{StaticResource CardColor}"/>
+                </ResourceDictionary>
+                
+                <!-- Paleta de colores moderna para tema CLARO -->
+                <ResourceDictionary x:Key="Light">
+                    <!-- Colores primarios -->
+                    <Color x:Key="PrimaryColor">#6366F1</Color><!-- Indigo vibrante -->
+                    <Color x:Key="PrimaryLightColor">#818CF8</Color>
+                    <Color x:Key="PrimaryDarkColor">#4F46E5</Color>
+                    
+                    <!-- Colores de acento -->
+                    <Color x:Key="AccentColor">#F59E0B</Color><!-- Amber cálido -->
+                    <Color x:Key="AccentLightColor">#FBBF24</Color>
+                    <Color x:Key="AccentDarkColor">#D97706</Color>
+                    
+                    <!-- Colores de fondo claros modernos -->
+                    <Color x:Key="BackgroundColor">#F8FAFC</Color><!-- Slate 50 -->
+                    <Color x:Key="SurfaceColor">#FFFFFF</Color><!-- Blanco puro -->
+                    <Color x:Key="CardColor">#F1F5F9</Color><!-- Slate 100 -->
+                    
+                    <!-- Colores de texto -->
+                    <Color x:Key="TextPrimaryColor">#0F172A</Color><!-- Slate 900 -->
+                    <Color x:Key="TextSecondaryColor">#64748B</Color><!-- Slate 500 -->
+                    
+                    <!-- Colores de borde -->
+                    <Color x:Key="BorderColor">#E2E8F0</Color><!-- Slate 200 -->
+                    
+                    <!-- Brushes -->
+                    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+                    <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLightColor}"/>
+                    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDarkColor}"/>
+                    
+                    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+                    <SolidColorBrush x:Key="AccentLightBrush" Color="{StaticResource AccentLightColor}"/>
+                    <SolidColorBrush x:Key="AccentDarkBrush" Color="{StaticResource AccentDarkColor}"/>
+                    
+                    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+                    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}"/>
+                    <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}"/>
+                    
+                    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
+                    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
+                    
+                    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+                    
+                    <!-- Card Dialog -->
+                    <SolidColorBrush x:Key="CardBackground" Color="{StaticResource SurfaceColor}"/>
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource BorderColor}"/>
+                    <SolidColorBrush x:Key="CardHeaderBackground" Color="{StaticResource CardColor}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+  
+    <Application.Styles>
+        <themes:FluentTheme/>
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+    </Application.Styles>
+</Application>

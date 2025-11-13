@@ -1,0 +1,126 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ChurchPresenter.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="800"
+             x:Class="ChurchPresenter.Views.MultimediaView"
+             x:DataType="vm:MultimediaViewModel">
+
+  <DockPanel>
+    <!-- Header con título y botones -->
+    <StackPanel DockPanel.Dock="Top" Margin="10">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="Multimedia" FontSize="20"/>
+        <Button Grid.Column="1" 
+                Command="{Binding AddMediaCommand}"
+                Content="+" 
+                Width="30"
+                Height="30"
+                Margin="10,0,0,0"
+                ToolTip.Tip="Agregar imagen o video"/>
+      </Grid>
+      
+      <!-- Selector de carpeta/día de culto -->
+      <ComboBox ItemsSource="{Binding Folders}"
+                SelectedItem="{Binding SelectedFolder}"
+                Margin="0,10,0,10"
+                HorizontalAlignment="Stretch"
+                ToolTip.Tip="Filtrar por día de culto"/>
+      
+      <!-- Botón de eliminar -->
+      <StackPanel Orientation="Horizontal" 
+                  HorizontalAlignment="Right" 
+                  Spacing="10"
+                  Margin="0,0,0,10"
+                  IsVisible="{Binding SelectedMediaItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <Button Command="{Binding DeleteMediaCommand}" Content="Eliminar"/>
+      </StackPanel>
+    </StackPanel>
+
+    <!-- Lista de elementos multimedia con miniaturas pequeñas -->
+    <ScrollViewer>
+      <ItemsControl ItemsSource="{Binding MediaItems}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Orientation="Horizontal"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border BorderBrush="LightGray" 
+                    BorderThickness="1" 
+                    Margin="3"
+                    Padding="3"
+                    Width="110"
+                    Height="120"
+                    CornerRadius="5"
+                    Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                    DoubleTapped="OnMediaItemDoubleTapped"
+                    Tag="{Binding}">
+              <Border.Styles>
+                <Style Selector="Border:pointerover">
+                  <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                  <Setter Property="BorderThickness" Value="2"/>
+                  <Setter Property="Cursor" Value="Hand"/>
+                </Style>
+              </Border.Styles>
+              
+              <StackPanel Spacing="3">
+                <!-- Miniatura pequeña -->
+                <Border Width="100" 
+                        Height="75" 
+                        Background="Black"
+                        CornerRadius="3"
+                        ClipToBounds="True">
+                  <Panel>
+                    <!-- Imagen thumbnail -->
+                    <Image Source="{Binding Thumbnail}"
+                           Stretch="Uniform"
+                           IsVisible="{Binding Thumbnail, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    
+                    <!-- Icono para videos o imágenes sin thumbnail -->
+                    <TextBlock Text="🎬" 
+                               FontSize="30"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding Thumbnail, Converter={x:Static ObjectConverters.IsNull}}"/>
+                    
+                    <!-- Badge de carpeta -->
+                    <Border Background="DodgerBlue"
+                            Padding="3,1"
+                            CornerRadius="2"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Margin="3">
+                      <TextBlock Text="{Binding FolderName}"
+                                 FontSize="8"
+                                 Foreground="White"
+                                 FontWeight="Bold"/>
+                    </Border>
+                  </Panel>
+                </Border>
+                
+                <!-- Nombre del archivo -->
+                <TextBlock Text="{Binding FileName}"
+                           TextWrapping="Wrap"
+                           FontSize="10"
+                           MaxHeight="30"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip.Tip="{Binding FileName}"/>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+    
+    <!-- Mensaje cuando no hay multimedia -->
+    <TextBlock Text="No hay elementos multimedia.&#x0a;Selecciona un día de culto y haz clic en '+' para agregar."
+               TextAlignment="Center"
+               VerticalAlignment="Center"
+               Foreground="Gray"
+               IsVisible="{Binding !MediaItems.Count}"/>
+  </DockPanel>
+</UserControl>

@@ -1,0 +1,292 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ChurchPresenter.ViewModels"
+             xmlns:converters="using:ChurchPresenter.Converters"
+             xmlns:views="using:ChurchPresenter.Views"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="ChurchPresenter.Views.SongsView"
+             x:DataType="vm:SongsViewModel"
+             Background="{DynamicResource BackgroundBrush}">
+
+  <Grid ColumnDefinitions="1*,1*,1*" Margin="16">
+    <!-- Primera columna con pestañas (Card) -->
+    <Border Grid.Column="0" 
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}" 
+            BorderThickness="1" 
+            CornerRadius="12"
+            Padding="20"
+            Margin="8">
+      <TabControl Background="Transparent" BorderThickness="0">
+        <TabControl.Styles>
+          <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="12"/>
+          </Style>
+        </TabControl.Styles>
+        
+        <!-- Pestaña de Canciones -->
+        <TabItem Header="Canciones">
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Margin="10">
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" Text="Canciones" FontSize="20"/>
+                <Button Grid.Column="1" 
+                        Command="{Binding AddSongCommand}"
+                        Content="+" 
+                        Width="30"
+                        Height="30"
+                        Margin="10,0,0,0"/>
+              </Grid>
+              <TextBox Text="{Binding SearchText}"
+                       Watermark="Buscar canciones..."
+                       Margin="0,10,0,10"/>
+              <StackPanel Orientation="Horizontal" 
+                          HorizontalAlignment="Right" 
+                          Spacing="10"
+                          Margin="0,0,0,10">
+                <Button Command="{Binding ExportSongsCommand}" Content="Exportar"/>
+                <Button Command="{Binding ImportSongsCommand}" Content="Importar"/>
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" 
+                          HorizontalAlignment="Right" 
+                          Spacing="10"
+                          IsVisible="{Binding SelectedSong, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Button Command="{Binding EditSongCommand}" Content="Editar"/>
+                <Button Command="{Binding DeleteSongCommand}" Content="Eliminar"/>
+              </StackPanel>
+            </StackPanel>
+            <ListBox ItemsSource="{Binding FilteredSongs}"
+                     SelectedItem="{Binding SelectedSong}"
+                     Background="Transparent"
+                     BorderThickness="0">
+              <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                  <Setter Property="Padding" Value="16"/>
+                  <Setter Property="Margin" Value="0,0,0,8"/>
+                  <Setter Property="CornerRadius" Value="8"/>
+                  <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                </Style>
+                <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                  <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                  <Setter Property="Foreground" Value="White"/>
+                </Style>
+                <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                  <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                  <Setter Property="Foreground" Value="White"/>
+                </Style>
+              </ListBox.Styles>
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel>
+                    <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Author}" FontSize="12" Opacity="0.8"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </TabItem>
+        
+        <!-- Pestaña de Biblia -->
+        <TabItem Header="Biblia">
+          <views:BibleView DataContext="{Binding BibleViewModel}"/>
+        </TabItem>
+        
+        <!-- Pestaña de Multimedia -->
+        <TabItem Header="Multimedia">
+          <views:MultimediaView DataContext="{Binding MultimediaViewModel}"/>
+        </TabItem>
+      </TabControl>
+    </Border>
+
+    <!-- Vista previa (Card) -->
+    <Border Grid.Column="1"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}" 
+            BorderThickness="1" 
+            CornerRadius="12"
+            Padding="20"
+            Margin="8">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" 
+                   Text="Vista Previa" 
+                   FontSize="20" 
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"
+                   Margin="0,0,0,16"/>
+        <Grid RowDefinitions="Auto,*">
+          <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <!-- Mostrar título de la canción seleccionada (solo si NO hay imagen en preview) -->
+            <TextBlock Text="{Binding SelectedSong.Title}" 
+                       FontSize="16" 
+                       FontWeight="Bold">
+              <TextBlock.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                  <Binding Path="SelectedSong" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                  <Binding Path="Presentation.MediaImage" Converter="{x:Static ObjectConverters.IsNull}"/>
+                </MultiBinding>
+              </TextBlock.IsVisible>
+            </TextBlock>
+            <!-- O el título de presentación para Biblia/multimedia -->
+            <TextBlock Text="{Binding Presentation.CurrentSongTitle}" 
+                       FontSize="16" 
+                       FontWeight="Bold">
+              <TextBlock.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                  <Binding Path="SelectedSong" Converter="{x:Static ObjectConverters.IsNull}"/>
+                  <Binding Path="Presentation.MediaImage" Converter="{x:Static ObjectConverters.IsNull}"/>
+                </MultiBinding>
+              </TextBlock.IsVisible>
+            </TextBlock>
+          </StackPanel>
+          
+          <!-- Para canciones -->
+          <ListBox Grid.Row="1" 
+                   ItemsSource="{Binding SelectedSong.Verses}"
+                   SelectedItem="{Binding SelectedVerse}"
+                   DoubleTapped="OnVerseDoubleTapped"
+                   Background="Transparent"
+                   BorderThickness="0">
+            <ListBox.IsVisible>
+              <MultiBinding Converter="{x:Static BoolConverters.And}">
+                <Binding Path="SelectedSong" Converter="{x:Static ObjectConverters.IsNotNull}"/>
+                <Binding Path="Presentation.MediaImage" Converter="{x:Static ObjectConverters.IsNull}"/>
+              </MultiBinding>
+            </ListBox.IsVisible>
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="Padding" Value="24"/>
+                <Setter Property="Margin" Value="0,0,0,12"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+              </Style>
+              <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+              </Style>
+              <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                <Setter Property="Background" Value="{DynamicResource PrimaryLightBrush}"/>
+              </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel>
+                  <Border Background="{DynamicResource AccentBrush}" 
+                          CornerRadius="4" 
+                          Padding="8,4"
+                          HorizontalAlignment="Left"
+                          Margin="0,0,0,8">
+                    <TextBlock Text="{Binding Label}" 
+                               FontWeight="Bold" 
+                               FontSize="11"
+                               Foreground="White"/>
+                  </Border>
+                  <TextBlock Text="{Binding Content}" 
+                             TextWrapping="Wrap"
+                             Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          
+          <!-- Para versículos de la Biblia -->
+          <TextBlock Grid.Row="1" 
+                     Text="{Binding Presentation.Column2Content}"
+                     TextWrapping="Wrap"
+                     FontSize="18"
+                     IsVisible="{Binding Presentation.Column2Content, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+          
+          <!-- Para imágenes multimedia -->
+          <Border Grid.Row="1"
+                  Background="Black"
+                  DoubleTapped="OnMediaPreviewDoubleTapped"
+                  Cursor="Hand"
+                  IsVisible="{Binding Presentation.MediaImage, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Image Source="{Binding Presentation.MediaImage}"
+                   Stretch="Uniform"/>
+          </Border>
+        </Grid>
+      </DockPanel>
+    </Border>
+
+    <!-- Presentación actual (Card) -->
+    <Border Grid.Column="2"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}" 
+            BorderThickness="1" 
+            CornerRadius="12"
+            Padding="20"
+            Margin="8">
+      <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+            <Ellipse Width="20" Height="20" Fill="{Binding IsPresenting, Converter={x:Static converters:BoolToBrushConverter.Instance}}"/>
+            <Button Command="{Binding TogglePresentationCommand}" 
+                    Content="{Binding IsPresenting, Converter={x:Static converters:BoolToStringConverter.Instance}}"/>
+          </StackPanel>
+          <TextBlock Text="En Presentación" 
+                     FontSize="20" 
+                     FontWeight="SemiBold"
+                     Foreground="{DynamicResource TextPrimaryBrush}"/>
+        </DockPanel>
+        <Grid RowDefinitions="Auto,*">
+          <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="{Binding Presentation.CurrentSongTitle}" 
+                       FontSize="16" 
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+          </StackPanel>
+          
+          <!-- Para canciones (solo si NO hay texto de Biblia NI imagen proyectada) -->
+          <Grid Grid.Row="1" 
+                RowDefinitions="Auto,*">
+            <Grid.IsVisible>
+              <MultiBinding Converter="{x:Static BoolConverters.And}">
+                <Binding Path="Presentation.Column3Content" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                <Binding Path="Presentation.ProjectedMediaImage" Converter="{x:Static ObjectConverters.IsNull}"/>
+              </MultiBinding>
+            </Grid.IsVisible>
+            <Border Grid.Row="0"
+                    Background="{DynamicResource AccentBrush}" 
+                    CornerRadius="4" 
+                    Padding="8,4"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,8"
+                    IsVisible="{Binding PresentingSong, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <TextBlock Text="{Binding PresentingVerse.Label}"
+                         FontWeight="Bold"
+                         FontSize="11"
+                         Foreground="White"/>
+            </Border>
+            
+            <TextBlock Grid.Row="1" 
+                       Text="{Binding PresentingVerse.Content}"
+                       TextWrapping="Wrap"
+                       FontSize="18"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
+                       IsVisible="{Binding PresentingSong, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+          </Grid>
+          
+          <!-- Para versículos de la Biblia -->
+          <TextBlock Grid.Row="1" 
+                     Text="{Binding Presentation.Column3Content}"
+                     TextWrapping="Wrap"
+                     FontSize="18"
+                     Foreground="{DynamicResource TextPrimaryBrush}"
+                     IsVisible="{Binding Presentation.Column3Content, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+          
+          <!-- Para imágenes proyectadas -->
+          <Border Grid.Row="1"
+                  Background="Black"
+                  IsVisible="{Binding Presentation.ProjectedMediaImage, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Image Source="{Binding Presentation.ProjectedMediaImage}"
+                   Stretch="Uniform"/>
+          </Border>
+        </Grid>
+      </DockPanel>
+    </Border>
+  </Grid>
+</UserControl>
