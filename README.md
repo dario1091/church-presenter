@@ -51,6 +51,20 @@ Para continuar:
 
 Esta advertencia desaparecerá en futuras versiones cuando obtengamos un certificado de firma de código.
 
+#### Desinstalación (Windows)
+
+Para eliminar completamente Church Presenter de tu sistema:
+
+1. Elimina el directorio de instalación:
+   - Si instalaste en `C:\Program Files\ChurchPresenter`, elimina esa carpeta
+   - Si usaste instalación portable, elimina la carpeta donde descomprimiste el archivo
+
+2. (Opcional) Elimina los accesos directos que hayas creado en el escritorio o menú de inicio
+
+3. (Opcional) Elimina los datos de usuario (canciones, caché, configuración):
+   - Dirígete a `C:\Users\TU_USUARIO\AppData\Local\ChurchPresenter` y elimina esa carpeta
+   - O presiona `Win + R`, escribe `%localappdata%\ChurchPresenter` y elimina la carpeta
+
 ### Linux
 
 #### Instalación Completa (Recomendada para actualizaciones)
@@ -66,17 +80,25 @@ Para una instalación completa que permita actualizaciones automáticas:
    ```bash
    sudo unzip ChurchPresenter-1.0.1-linux-full.nupkg -d /opt/ChurchPresenter
    ```
-4. Crea un enlace simbólico para ejecutar desde cualquier lugar:
+4. **Importante**: Cambia el propietario del directorio a tu usuario para permitir actualizaciones automáticas:
    ```bash
-   sudo ln -sf /opt/ChurchPresenter/current/ChurchPresenter /usr/local/bin/church-presenter
+   sudo chown -R $USER:$USER /opt/ChurchPresenter
    ```
-5. (Opcional) Crea un archivo .desktop para el menú de aplicaciones:
+5. Da permisos de ejecución al AppImage:
+   ```bash
+   chmod +x /opt/ChurchPresenter/lib/app/ChurchPresenter.AppImage
+   ```
+6. Crea un enlace simbólico para ejecutar desde cualquier lugar:
+   ```bash
+   sudo ln -sf /opt/ChurchPresenter/lib/app/ChurchPresenter.AppImage /usr/local/bin/church-presenter
+   ```
+7. (Opcional) Crea un archivo .desktop para el menú de aplicaciones:
    ```bash
    sudo tee /usr/share/applications/church-presenter.desktop > /dev/null <<EOF
    [Desktop Entry]
    Name=Church Presenter
-   Exec=/opt/ChurchPresenter/current/ChurchPresenter
-   Icon=/opt/ChurchPresenter/current/ChurchPresenter.png
+   Exec=/opt/ChurchPresenter/lib/app/ChurchPresenter.AppImage
+   Icon=/opt/ChurchPresenter/lib/app/ChurchPresenter.png
    Type=Application
    Categories=Utility;
    EOF
@@ -99,6 +121,36 @@ Si prefieres una instalación portable sin actualizaciones:
    ```
 
 **Nota:** La instalación portable no permite actualizaciones automáticas.
+
+#### Desinstalación (Linux)
+
+Para eliminar completamente Church Presenter de tu sistema:
+
+1. Elimina el enlace simbólico:
+   ```bash
+   sudo rm -f /usr/local/bin/church-presenter
+   ```
+
+2. Elimina el directorio de instalación:
+   ```bash
+   sudo rm -rf /opt/ChurchPresenter
+   ```
+
+3. (Opcional) Si creaste el archivo .desktop, elimínalo:
+   ```bash
+   sudo rm -f /usr/share/applications/church-presenter.desktop
+   ```
+
+4. (Opcional) Elimina los datos de usuario (canciones, caché, configuración):
+   ```bash
+   rm -rf ~/.local/share/ChurchPresenter
+   rm -rf ~/.config/ChurchPresenter
+   ```
+
+5. (Opcional) Limpia el caché de Velopack (útil si tienes problemas con actualizaciones):
+   ```bash
+   rm -rf /var/tmp/velopack/ChurchPresenter/ ~/.local/share/ChurchPresenter/ && echo "Caché de Velopack limpiado"
+   ```
 
 ---
 
